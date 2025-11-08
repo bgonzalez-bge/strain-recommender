@@ -28,23 +28,23 @@ export function getRandomTitle(type: string, name: string): string {
   let titles: string[] = [];
 
   switch (type) {
-    case "conditions":
-      titles = ConditionDashboardTitles;
-      break;
-    case "symptoms":
-      titles = SymptomDashboardTitles;
-      break;
-    case "effects":
-      titles = EffectsDashboardTitles;
-      break;
-    case "strain":
-      // Indica uses special “an” wording
-      titles = name.toLowerCase().startsWith("i")
-        ? StrainTypeDashboardIndicaTitles
-        : StrainTypeDashboardTitles;
-      break;
-    default:
-      titles = ["Related to "];
+  case "conditions":
+    titles = ConditionDashboardTitles;
+    break;
+  case "symptoms":
+    titles = SymptomDashboardTitles;
+    break;
+  case "effects":
+    titles = EffectsDashboardTitles;
+    break;
+  case "strain":
+    // Indica uses special “an” wording
+    titles = name.toLowerCase().startsWith("i") ?
+      StrainTypeDashboardIndicaTitles :
+      StrainTypeDashboardTitles;
+    break;
+  default:
+    titles = ["Related to "];
   }
 
   const prefix = titles[Math.floor(Math.random() * titles.length)];

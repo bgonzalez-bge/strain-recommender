@@ -1,10 +1,10 @@
-import { onRequest } from "firebase-functions/v2/https";
+import {onRequest} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
-import { callVertexRecommender } from "./vertexRecommender";
-import { enrichWithBack4AppData } from "./strainEnricher";
-import { groupRecommendationsByAttribute } from "./groupRecommendationsByAttribute";
-import { RecommendationResponse } from "./types";
-import { filterStrainDetails } from "./utils/filterStrainDetails";
+import {callVertexRecommender} from "./vertexRecommender";
+import {enrichWithBack4AppData} from "./strainEnricher";
+import {groupRecommendationsByAttribute} from "./groupRecommendationsByAttribute";
+import {RecommendationResponse} from "./types";
+import {filterStrainDetails} from "./utils/filterStrainDetails";
 
 const TOP_K_PREDICTIONS_DEFAULT = 100;
 const MAX_STRAINS_PER_GROUP_DEFAULT = 4;
@@ -27,16 +27,16 @@ export const strain_recommender = onRequest(async (req, res) => {
   try {
     const user_id = req.query.user_id as string;
     const top_k = req.query.top_k ? Number(req.query.top_k) : TOP_K_PREDICTIONS_DEFAULT;
-    const max_strains_per_group = req.query.max_per_group
-      ? Number(req.query.max_per_group)
-      : MAX_STRAINS_PER_GROUP_DEFAULT; 
+    const max_strains_per_group = req.query.max_per_group ?
+      Number(req.query.max_per_group) :
+      MAX_STRAINS_PER_GROUP_DEFAULT;
 
-    const min_confidence = req.query.min_confidence
-    ? Number(req.query.min_confidence)
-    : MIN_CONFIDENCE_DEFAULT;
+    const min_confidence = req.query.min_confidence ?
+      Number(req.query.min_confidence) :
+      MIN_CONFIDENCE_DEFAULT;
 
     if (!user_id) {
-      res.status(400).json({ error: "Missing user_id parameter" });
+      res.status(400).json({error: "Missing user_id parameter"});
       return;
     }
 
@@ -53,18 +53,18 @@ export const strain_recommender = onRequest(async (req, res) => {
 
     // Collect unique strain details
     const uniqueStrains = Array.from(
-    new Map(
+      new Map(
         enrichedStrains
-        .filter((e) => e.details)
-        .map((e) => [
+          .filter((e) => e.details)
+          .map((e) => [
             e.strain_id,
             {
-                strain_id: e.strain_id,
-                percentage: e.percentage,
-                ...filterStrainDetails(e.details!, STRAIN_FIELDS),
+              strain_id: e.strain_id,
+              percentage: e.percentage,
+              ...filterStrainDetails(e.details!, STRAIN_FIELDS),
             },
-        ])
-    ).values()
+          ])
+      ).values()
     ).sort((a, b) => (b.percentage ?? 0) - (a.percentage ?? 0));
 
     // 5️⃣ Response
@@ -77,6 +77,6 @@ export const strain_recommender = onRequest(async (req, res) => {
     res.status(200).json(response);
   } catch (error: any) {
     logger.error("strain_recommender error:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({error: error.message});
   }
 });

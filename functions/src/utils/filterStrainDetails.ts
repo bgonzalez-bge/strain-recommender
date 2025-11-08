@@ -1,4 +1,4 @@
-import { StrainDetails } from "../types";
+import {StrainDetails} from "../types";
 
 export function filterStrainDetails(
   details: StrainDetails,
