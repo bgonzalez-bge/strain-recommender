@@ -13,10 +13,20 @@ interface VertexRecommenderRequest {
   }>;
 }
 
+/**
+ * Calls the Vertex AI Recommender API to fetch strain recommendations for a given user.
+ *
+ * @async
+ * @function callVertexRecommender
+ * @param {string} userId - The ID of the user to generate recommendations for.
+ * @param {number} topK - The number of top recommendations to retrieve from Vertex AI.
+ * @param {number} [min_percentage] - Optional minimum percentage threshold to filter recommendations.
+ * @return {Promise<VertexRecommenderPrediction[]>} A promise that resolves with the filtered predictions.
+ */
 export async function callVertexRecommender(
-  user_id: string,
-  top_k: number,
-  min_confidence: number,
+  userId: string,
+  topK: number,
+  minConfidence: number,
 ): Promise<VertexRecommenderResponse> {
   // Create an authenticated client
   const auth = new GoogleAuth({
@@ -33,7 +43,7 @@ export async function callVertexRecommender(
   const url = `https://${LOCATION}-aiplatform.googleapis.com/v1/projects/${PROJECT_ID}/locations/${LOCATION}/endpoints/${ENDPOINT_ID}:predict`;
 
   const body: VertexRecommenderRequest = {
-    instances: [{user_id, top_k}],
+    instances: [{user_id: userId, top_k: topK}],
   };
 
   const response = await fetchFn(url, {
@@ -55,7 +65,7 @@ export async function callVertexRecommender(
   const data = (await response.json()) as VertexRecommenderResponse;
 
   const filteredPredictions =
-    data.predictions.filter((p) => p.percentage >= min_confidence) ?? [];
+    data.predictions.filter((p) => p.percentage >= minConfidence) ?? [];
 
   return {predictions: filteredPredictions};
 }
