@@ -32,9 +32,9 @@ export function groupRecommendationsByAttribute(
 
   const normalize = (value: string | string[] | undefined): string[] => {
     if (!value) return [];
-    return Array.isArray(value)
-      ? value.map((v) => v.trim()).filter(Boolean)
-      : value.split(",").map((v) => v.trim()).filter(Boolean);
+    return Array.isArray(value) ?
+      value.map((v) => v.trim()).filter(Boolean) :
+      value.split(",").map((v) => v.trim()).filter(Boolean);
   };
 
   // Build groups
@@ -42,7 +42,7 @@ export function groupRecommendationsByAttribute(
     const details = strain.details;
     if (!details) continue;
 
-    const ref = { strain_id: strain.strain_id, name: details.name, percentage: strain.percentage };
+    const ref = {strain_id: strain.strain_id, name: details.name, percentage: strain.percentage};
 
     if (details.strain) addToGroup("strain", details.strain.trim(), ref);
     for (const c of normalize(details.conditions)) addToGroup("conditions", c, ref);
@@ -77,11 +77,11 @@ export function groupRecommendationsByAttribute(
     if (available.length >= minPerGroup) {
       const chosen = available.slice(0, maxPerGroup); // trim extras automatically
       chosen.forEach((s) => usedStrains.add(s.strain_id));
-      selectedGroups.push({ ...group, strains: chosen });
+      selectedGroups.push({...group, strains: chosen});
     }
   }
 
-  //Return final valid groups, sorted by average strain percentage (descending)
+  // Return final valid groups, sorted by average strain percentage (descending)
   return selectedGroups
     .filter(
       (g) => g.strains.length >= minPerGroup && g.strains.length <= maxPerGroup

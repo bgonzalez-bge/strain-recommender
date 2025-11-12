@@ -53,7 +53,7 @@ export async function enrichWithBack4AppData(
 
   // Helper: fetch a single batch
   const fetchBatch = async (batch: string[], index: number): Promise<void> => {
-    const whereQuery = JSON.stringify({ objectId: { $in: batch } });
+    const whereQuery = JSON.stringify({objectId: {$in: batch}});
     const url = `${B4A_URL}?where=${encodeURIComponent(whereQuery)}&limit=${BATCH_SIZE}`;
 
     logger.info(`Fetching batch ${index + 1}/${batches.length} (${batch.length} IDs)`);
@@ -98,7 +98,7 @@ export async function enrichWithBack4AppData(
   // Merge Vertex predictions with Back4App strain details
   const enriched: EnrichedStrain[] = vertexResponse.predictions.map((pred) => {
     const details = allResults.find((s) => s.objectId === pred.strain_id);
-    return { ...pred, details };
+    return {...pred, details};
   });
 
   return enriched;
