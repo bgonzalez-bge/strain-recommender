@@ -26,6 +26,7 @@ export interface EnrichedStrain {
 
 export interface GroupedStrainRef {
   strain_id: string;
+  name: string;
   percentage: number;
 }
 

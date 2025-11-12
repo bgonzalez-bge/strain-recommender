@@ -7,9 +7,11 @@ import {groupRecommendationsByAttribute}
 import {RecommendationResponse} from "./types";
 import {filterStrainDetails} from "./utils/filterStrainDetails";
 
-const TOP_K_PREDICTIONS_DEFAULT = 100;
+const TOP_K_PREDICTIONS_DEFAULT = 900;
+const MAX_GROUPS_DEFAULT = 20;
+const MIN_STRAINS_PER_GROUP_DEFAULT = 4;
 const MAX_STRAINS_PER_GROUP_DEFAULT = 4;
-const MIN_CONFIDENCE_DEFAULT = 80;
+const MIN_CONFIDENCE_DEFAULT = 0;
 const STRAIN_FIELDS = [
   "objectId",
   "name",
@@ -29,9 +31,18 @@ export const strainRecommender = onRequest(async (req, res) => {
     const userId = req.query.user_id as string;
     const topK = req.query.top_k ?
       Number(req.query.top_k) : TOP_K_PREDICTIONS_DEFAULT;
+
     const maxStrainsPerGroup = req.query.max_per_group ?
       Number(req.query.max_per_group) :
       MAX_STRAINS_PER_GROUP_DEFAULT;
+
+    const minStrainsPerGroup = req.query.min_per_group ?
+      Number(req.query.min_per_group) :
+      MIN_STRAINS_PER_GROUP_DEFAULT;
+
+    const maxGroups = req.query.max_groups ?
+      Number(req.query.max_groups) :
+      MAX_GROUPS_DEFAULT;
 
     const minConfidence = req.query.min_confidence ?
       Number(req.query.min_confidence) :
@@ -55,6 +66,8 @@ export const strainRecommender = onRequest(async (req, res) => {
 
     // Build grouped recommendations (lightweight strain refs)
     const grouped = groupRecommendationsByAttribute(enrichedStrains,
+      maxGroups,
+      minStrainsPerGroup,
       maxStrainsPerGroup);
 
     // Collect unique strain details
