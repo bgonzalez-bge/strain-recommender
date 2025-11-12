@@ -5,9 +5,15 @@ export function filterStrainDetails(
   allowedFields: string[]
 ): Partial<StrainDetails> {
   const filtered: Partial<StrainDetails> = {};
+
   for (const key of allowedFields) {
-    if (details[key] !== undefined) {
-      filtered[key] = details[key];
+    if (key in details) {
+      const typedKey = key as keyof StrainDetails;
+      const value = details[typedKey];
+      if (value !== undefined) {
+        // Explicitly tell TS this assignment matches the type
+        (filtered[typedKey] as StrainDetails[typeof typedKey]) = value;
+      }
     }
   }
   return filtered;

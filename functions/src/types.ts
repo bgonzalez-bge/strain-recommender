@@ -8,14 +8,15 @@ export interface VertexRecommenderResponse {
 }
 
 export interface StrainDetails {
+  objectId: string;
   strain_id: string;
   percentage?: number;
   name: string;
-  type?: string;
+  strain?: string;
   conditions?: string | string[];
   symptoms?: string | string[];
   effects?: string | string[];
-  [key: string]: any;
+  negatives?: string | string[];
 }
 
 export interface EnrichedStrain {
@@ -26,8 +27,8 @@ export interface EnrichedStrain {
 
 export interface GroupedStrainRef {
   strain_id: string;
-  name: string;
   percentage: number;
+  details: Partial<StrainDetails>
 }
 
 export interface GroupedRecommendation {
@@ -40,5 +41,4 @@ export interface GroupedRecommendation {
 export interface RecommendationResponse {
   user_id: string;
   recommendations: GroupedRecommendation[];
-  strains: Partial<StrainDetails>[];
 }

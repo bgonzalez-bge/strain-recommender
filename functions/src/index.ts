@@ -5,26 +5,12 @@ import {enrichWithBack4AppData} from "./strainEnricher";
 import {groupRecommendationsByAttribute}
   from "./groupRecommendationsByAttribute";
 import {RecommendationResponse} from "./types";
-import {filterStrainDetails} from "./utils/filterStrainDetails";
 
 const TOP_K_PREDICTIONS_DEFAULT = 900;
 const MAX_GROUPS_DEFAULT = 20;
 const MIN_STRAINS_PER_GROUP_DEFAULT = 4;
 const MAX_STRAINS_PER_GROUP_DEFAULT = 4;
 const MIN_CONFIDENCE_DEFAULT = 0;
-const STRAIN_FIELDS = [
-  "objectId",
-  "name",
-  "name2",
-  "strain",
-  "image",
-  "conditions",
-  "symptoms",
-  "flavors",
-  "effects",
-  "thcLevel",
-  "generalInfo",
-];
 
 export const strainRecommender = onRequest(async (req, res) => {
   try {
@@ -70,27 +56,10 @@ export const strainRecommender = onRequest(async (req, res) => {
       minStrainsPerGroup,
       maxStrainsPerGroup);
 
-    // Collect unique strain details
-    const uniqueStrains = Array.from(
-      new Map(
-        enrichedStrains
-          .filter((e) => e.details)
-          .map((e) => [
-            e.strain_id,
-            {
-              strain_id: e.strain_id,
-              percentage: e.percentage,
-              ...filterStrainDetails(e.details!, STRAIN_FIELDS),
-            },
-          ])
-      ).values()
-    ).sort((a, b) => (b.percentage ?? 0) - (a.percentage ?? 0));
-
-    // 5️⃣ Response
+    // Response
     const response: RecommendationResponse = {
       user_id: userId,
       recommendations: grouped,
-      strains: uniqueStrains,
     };
 
     res.status(200).json(response);

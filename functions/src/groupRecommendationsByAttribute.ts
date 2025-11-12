@@ -4,6 +4,21 @@ import {
   GroupedStrainRef,
 } from "./types";
 import {getRandomTitle} from "./utils/groupTitles";
+import {filterStrainDetails} from "./utils/filterStrainDetails";
+
+const OUTPUT_STRAIN_DETAILS = [
+  "name",
+  "name2",
+  "strain",
+  "image",
+  "conditions",
+  "symptoms",
+  "flavors",
+  "effects",
+  "thcLevel",
+  "generalInfo",
+  "description1",
+];
 
 /**
  * Groups strains by each unique attribute value,
@@ -42,7 +57,7 @@ export function groupRecommendationsByAttribute(
     const details = strain.details;
     if (!details) continue;
 
-    const ref = {strain_id: strain.strain_id, name: details.name, percentage: strain.percentage};
+    const ref = {strain_id: strain.strain_id, percentage: strain.percentage, details: filterStrainDetails(details, OUTPUT_STRAIN_DETAILS)};
 
     if (details.strain) addToGroup("strain", details.strain.trim(), ref);
     for (const c of normalize(details.conditions)) addToGroup("conditions", c, ref);
