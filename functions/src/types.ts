@@ -13,6 +13,7 @@ export interface StrainDetails {
   percentage?: number;
   name: string;
   strain?: string;
+  strainInfo?: string;
   conditions?: string | string[];
   symptoms?: string | string[];
   effects?: string | string[];

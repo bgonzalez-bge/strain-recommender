@@ -4,6 +4,7 @@ const OUTPUT_STRAIN_DETAILS = [
   "name",
   "name2",
   "strain",
+  "straininfo",
   "image",
   "conditions",
   "symptoms",
