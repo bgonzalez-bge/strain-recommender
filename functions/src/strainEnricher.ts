@@ -98,7 +98,7 @@ export async function enrichWithBack4AppData(
   // Merge Vertex predictions with Back4App strain details
   const enriched: EnrichedStrain[] = vertexResponse.predictions.map((pred) => {
     const details = allResults.find((s) => s.objectId === pred.strain_id);
-    return {...pred, details};
+    return {...pred, details: details!};
   });
 
   return enriched;

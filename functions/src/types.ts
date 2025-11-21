@@ -22,7 +22,7 @@ export interface StrainDetails {
 export interface EnrichedStrain {
   strain_id: string;
   percentage: number;
-  details?: StrainDetails;
+  details: StrainDetails;
 }
 
 export interface GroupedStrainRef {
@@ -40,5 +40,6 @@ export interface GroupedRecommendation {
 
 export interface RecommendationResponse {
   user_id: string;
+  strainOfTheDay?: GroupedStrainRef
   recommendations: GroupedRecommendation[];
 }

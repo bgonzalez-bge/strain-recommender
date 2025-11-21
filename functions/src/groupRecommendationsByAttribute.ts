@@ -4,21 +4,7 @@ import {
   GroupedStrainRef,
 } from "./types";
 import {getRandomTitle} from "./utils/groupTitles";
-import {filterStrainDetails} from "./utils/filterStrainDetails";
-
-const OUTPUT_STRAIN_DETAILS = [
-  "name",
-  "name2",
-  "strain",
-  "image",
-  "conditions",
-  "symptoms",
-  "flavors",
-  "effects",
-  "thcLevel",
-  "generalInfo",
-  "description1",
-];
+import {getFilteredGroupedStrainRef} from "./utils/filterStrainDetails";
 
 /**
  * Groups strains by each unique attribute value,
@@ -57,12 +43,12 @@ export function groupRecommendationsByAttribute(
     const details = strain.details;
     if (!details) continue;
 
-    const ref = {strain_id: strain.strain_id, percentage: strain.percentage, details: filterStrainDetails(details, OUTPUT_STRAIN_DETAILS)};
+    const ref = getFilteredGroupedStrainRef(strain);
 
-    if (details.strain) addToGroup("strain", details.strain.trim(), ref);
-    for (const c of normalize(details.conditions)) addToGroup("conditions", c, ref);
-    for (const s of normalize(details.symptoms)) addToGroup("symptoms", s, ref);
-    for (const e of normalize(details.effects)) addToGroup("effects", e, ref);
+    if (details.strain) addToGroup("strain", details.strain.trim(), ref!);
+    for (const c of normalize(details.conditions)) addToGroup("conditions", c, ref!);
+    for (const s of normalize(details.symptoms)) addToGroup("symptoms", s, ref!);
+    for (const e of normalize(details.effects)) addToGroup("effects", e, ref!);
   }
 
   // Sort and trim groups

@@ -5,6 +5,7 @@ import {enrichWithBack4AppData} from "./strainEnricher";
 import {groupRecommendationsByAttribute}
   from "./groupRecommendationsByAttribute";
 import {RecommendationResponse} from "./types";
+import {fetchStrainOfTheDay} from "./strainOfTheDayFetcher";
 
 const TOP_K_PREDICTIONS_DEFAULT = 900;
 const MAX_GROUPS_DEFAULT = 20;
@@ -59,6 +60,7 @@ export const strainRecommender = onRequest(async (req, res) => {
     // Response
     const response: RecommendationResponse = {
       user_id: userId,
+      strainOfTheDay: fetchStrainOfTheDay(enrichedStrains),
       recommendations: grouped,
     };
 
