@@ -72,13 +72,18 @@ export function groupRecommendationsByAttribute(
   const selectedGroups: GroupedRecommendation[] = [];
   const usedStrains = new Set<string>();
 
+  const selectedNames = new Set<string>();
   // Pick top available strains per group
   for (const group of shuffle(validGroups)) {
+    const normalizedName = group.name.trim().toLowerCase();
+    if (selectedNames.has(normalizedName)) continue;
+
     const available = group.strains.filter((s) => !usedStrains.has(s.strain_id));
     if (available.length >= minPerGroup) {
       const chosen = available.slice(0, maxPerGroup); // trim extras automatically
       chosen.forEach((s) => usedStrains.add(s.strain_id));
       selectedGroups.push({...group, strains: chosen});
+      selectedNames.add(normalizedName);
     }
   }
 
